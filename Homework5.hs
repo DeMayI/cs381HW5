@@ -1,3 +1,4 @@
+module Homework5 where
 import HW5Types
 
 
@@ -12,7 +13,7 @@ rankC (POP k) = (k,0)
 rankC (IFELSE p1 p2) = (1,0)
 rankC (LDB b) = (0,1)
 rankC LEQ = (2,1)
-
+rankC _ = (0,0)
 rankB :: CmdRank -> Rank -> Bool
 rankB (p, i) r = ((r - p) >= 0)
 
@@ -44,3 +45,5 @@ rankP ((IFELSE p1 p2):cs) r
 rankP (c:cs) r 
     | rankB (rankC c) r = rankP cs (nRank (rankC c) r)
     | otherwise = Nothing
+
+--run :: Prog -> Stack -> Result

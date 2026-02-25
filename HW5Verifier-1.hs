@@ -54,6 +54,7 @@ rankAll = putStrLn ("\nRank programs with stacks \n\n"++(prettyERank pList sList
 rankAllEmpty :: IO ()
 rankAllEmpty = putStrLn ("\nRank programs with empty stacks \n\n"++(prettyERank pList eList))
 
+{-
 prettySRun :: Prog -> Stack ->String
 prettySRun p s = " s:"++show s++" p:"++show p++" ==> "++show (run p s)++"\n"
 
@@ -73,3 +74,4 @@ runAllTests = runS pList sList
 
 runAllEmpty :: IO()
 runAllEmpty = runS pList eList
+-}
