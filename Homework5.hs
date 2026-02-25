@@ -66,7 +66,6 @@ sem (c:cs) s =
     TypeError -> TypeError  -- stop execution on Nothing
 
 semCmd :: Cmd -> Stack -> Result
-semCmd _ _ = TypeError
 -- ADD two ints from stack
 semCmd ADD ((I i):(I i'):s) = A ((I (i + i')):s)
 semCmd ADD _ = TypeError
@@ -91,8 +90,8 @@ semCmd SWAP _ = TypeError
 semCmd LEQ ((I i):(I i'):s) = A ((B(i <= i')):s)
 semCmd LEQ _ = TypeError
 -- IFELSE If top of stack is True, execute first, if false execute second
-semCmd (IFELSE p1 p2) ((B True):s) = semCmd p1 s
-semCmd (IFELSE p1 p2) ((B False):s) = semCmd p2 s
+semCmd (IFELSE p1 p2) ((B True):s) = sem p1 s
+semCmd (IFELSE p1 p2) ((B False):s) = sem p2 s
 semCmd (IFELSE _ _) _ = TypeError
 -- POP k values from the stack
 semCmd (POP k) s = A (drop k s)
