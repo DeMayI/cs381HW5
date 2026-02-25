@@ -1,3 +1,7 @@
+--Name: Isaac DeMay, Zachary Goldstein
+--Date: 2/24/2026
+
+
 module Homework5 where
 import HW5Types
 
@@ -13,6 +17,7 @@ rankC (POP k) = (k,0) --Mine
 rankC (IFELSE p1 p2) = (1,0)
 rankC (LDB b) = (0,1)
 rankC LEQ = (2,1)
+rankC INC = (1,1)
 rankC _ = (0,0)
 
 rankB :: CmdRank -> Rank -> Bool
@@ -95,5 +100,7 @@ semCmd (IFELSE p1 p2) ((B False):s) = sem p2 s
 semCmd (IFELSE _ _) _ = TypeError
 -- POP k values from the stack
 semCmd (POP k) s = A (drop k s)
+semCmd INC ((I i):s) = A ((I(i + 1)):s)
+
 -- Undefined commands
 semCmd _ _ = TypeError
