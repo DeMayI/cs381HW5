@@ -9,7 +9,7 @@ rankC (LDI i) = (0,1)
 rankC MULT = (2,1)
 rankC DUP = (1,2)
 rankC SWAP = (2,2)
-rankC (POP k) = (k,0)
+rankC (POP k) = (k,0) --Mine
 rankC (IFELSE p1 p2) = (1,0)
 rankC (LDB b) = (0,1)
 rankC LEQ = (2,1)
@@ -56,7 +56,26 @@ run :: Prog -> Stack -> Result
 run p s
   = case rankP p (stackToRank s) of
     Nothing -> RankError
-    Just x -> semCmd p s
+    Just x -> sem p s
 
-semCmd :: Prog -> Stack -> Result
+sem :: Prog -> Stack -> Result
+sem [] s = A s       -- no program: succeed with current stack
+sem (c:cs) s =
+  case semCmd c s of
+    A s' -> sem cs s'
+    TypeError -> TypeError  -- stop execution on Nothing
+
+
+semCmd :: Cmd -> Stack -> Result
+
+semCmd (LDB b) s = A ((B b):s)
+
+semCmd (IFELSE [] _ ) ((B True):s) = A s
+semCmd (IFELSE p1 _ ) ((B True):s) = sem p1 s
+semCmd (IFELSE _ [] ) ((B False):s) = A s
+semCmd (IFELSE _ p2 ) ((B False):s) = sem p2 s
+semCmd (IFELSE _ _ ) _ = TypeError
+
+semCmd LEQ ((I i):(I i'):s) = A ((B(i <= i')):s)
+semCmd LEQ s = TypeError
 semCmd _ _ = TypeError
