@@ -30,9 +30,17 @@ minRank x y
 
 rankP :: Prog -> Rank -> Maybe Rank
 rankP [] r = Just r
-rankP ((IFELSE p1 p2):cs) r 
-    | rankB (rankC (IFELSE p1 p2)) r && minRank (rankP p1 (nRank (rankC (IFELSE p1 p2)) r)) (rankP p2 (nRank (rankC (IFELSE p1 p2)) r)) /= Nothing = rankP cs (minRank (rankP p1 (nRank (rankC (IFELSE p1 p2)) r)) (rankP p2 (nRank (rankC (IFELSE p1 p2)) r)))
-    | otherwise = Nothing
+
+rankP ((IFELSE p1 p2):cs) r
+  | rankB (rankC (IFELSE p1 p2)) r
+    , let mr = minRank (rankP p1 r1) (rankP p2 r1)
+          r1 = nRank (rankC (IFELSE p1 p2)) r
+    , mr /= Nothing
+  = case mr of
+      Just r' -> rankP cs r'
+      Nothing -> Nothing         
+
+  | otherwise = Nothing
 rankP (c:cs) r 
     | rankB (rankC c) r = rankP cs (nRank (rankC c) r)
     | otherwise = Nothing
