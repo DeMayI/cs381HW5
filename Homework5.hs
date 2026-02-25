@@ -68,7 +68,7 @@ sem (c:cs) s =
 semCmd :: Prog -> Stack -> Result
 semCmd _ _ = TypeError
 -- ADD two ints from stack
-semCmd ADD ((I i):(I i';='):s) = A ((I (i + i')):s)
+semCmd ADD ((I i):(I i'):s) = A ((I (i + i')):s)
 semCmd ADD _ = TypeError
 -- LDI load an int onto the stack
 semCmd (LDI i) s = A ((I i):s)
