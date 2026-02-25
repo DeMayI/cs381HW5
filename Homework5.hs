@@ -60,3 +60,34 @@ run p s
 
 semCmd :: Prog -> Stack -> Result
 semCmd _ _ = TypeError
+-- ADD two ints from stack
+semCmd ADD ((I i):(I i';='):s) = A ((I (i + i')):s)
+semCmd ADD _ = TypeError
+-- LDI load an int onto the stack
+semCmd (LDI i) s = A ((I i):s)
+-- LDB Load a bool onto the stack
+semCmd (LDB b) s = A ((B b):s)
+-- MULT two ints from stack
+semCmd MULT ((I i):(I i'):s) = A ((I (i * i')):s)
+semCmd MULT _ = TypeError
+-- DUP duplicate the top value
+semCmd DUP ((I i):s) = A ((I i):(I i):s)
+semCmd DUP ((B b):s) = A ((B b):(B b):s)
+semCmd DUP _ = TypeError
+-- SWAP the top two values on the stack
+semCmd SWAP ((I i):(I i'):s) = A ((I i'):(I i):s)
+semCmd SWAP ((B b):(B b'):s) = A ((B b'):(B b):s)
+semCmd SWAP ((I i):(B b):s) = A ((B b):(I i):s)
+semCmd SWAP ((B b):(I i):s) = A ((I i):(B b):s)
+semCmd SWAP _ = TypeError
+-- LEQ if top value is less than next, push True, otherwise push False
+semCmd LEQ ((I i):(I i'):s) = A ((B(i <= i')):s)
+semCmd LEQ _ = TypeError
+-- IFELSE If top of stack is True, execute first, if false execute second
+semCmd (IFELSE p1 p2) ((B True):s) = semCmd p1 s
+semCmd (IFELSE p1 p2) ((B False):s) = semCmd p2 s
+semCmd (IFELSE _ _) _ = TypeError
+-- POP k values from the stack
+semCmd (POP k) s = A (drop k s)
+-- Undefined commands
+semCmd _ _ = TypeError
