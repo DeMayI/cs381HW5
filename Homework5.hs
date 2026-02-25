@@ -65,10 +65,10 @@ sem (c:cs) s =
     A s' -> sem cs s'
     TypeError -> TypeError  -- stop execution on Nothing
 
-semCmd :: Prog -> Stack -> Result
+semCmd :: Cmd -> Stack -> Result
 semCmd _ _ = TypeError
 -- ADD two ints from stack
-semCmd ADD ((I i):(I i';='):s) = A ((I (i + i')):s)
+semCmd ADD ((I i):(I i'):s) = A ((I (i + i')):s)
 semCmd ADD _ = TypeError
 -- LDI load an int onto the stack
 semCmd (LDI i) s = A ((I i):s)
