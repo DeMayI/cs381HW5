@@ -14,6 +14,7 @@ rankC (IFELSE p1 p2) = (1,0)
 rankC (LDB b) = (0,1)
 rankC LEQ = (2,1)
 rankC _ = (0,0)
+
 rankB :: CmdRank -> Rank -> Bool
 rankB (p, i) r = ((r - p) >= 0)
 
@@ -46,4 +47,8 @@ rankP (c:cs) r
     | rankB (rankC c) r = rankP cs (nRank (rankC c) r)
     | otherwise = Nothing
 
---run :: Prog -> Stack -> Result
+run :: Prog -> Stack -> Result
+run p s
+  = case rankP p s of
+    Nothing -> RankError
+    Just x -> semCmd p s
