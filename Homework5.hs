@@ -47,8 +47,16 @@ rankP (c:cs) r
     | rankB (rankC c) r = rankP cs (nRank (rankC c) r)
     | otherwise = Nothing
 
+stackToRank :: Stack -> Rank
+stackToRank [] = 0
+stackToRank (x:xs) = 1 + stackToRank xs
+
+
 run :: Prog -> Stack -> Result
 run p s
-  = case rankP p s of
+  = case rankP p (stackToRank s) of
     Nothing -> RankError
     Just x -> semCmd p s
+
+semCmd :: Prog -> Stack -> Result
+semCmd _ _ = TypeError
